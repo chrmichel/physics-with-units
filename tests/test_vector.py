@@ -2,6 +2,7 @@ import pytest
 from math import sqrt, pi
 
 from classes import Vector, Quantity, Unit
+from constants import Constant
 
 
 @pytest.fixture
@@ -106,3 +107,18 @@ def test_cross(vec1, vec2):
     assert round(cp.dot(vec1), 6) == 0
     assert round(cp.dot(vec2), 6) == 0
     assert vec2.cross(vec1) == -cp
+
+
+def test_name(vec_m):
+    assert vec_m.name == "length"
+    grav = Constant.g_vector
+    assert grav.name == "gravitational vector"
+    Unit.update_dimensions("mechanics")
+    twograv = 2*grav
+    assert twograv.name == "acceleration"
+
+
+def test_rmul(vec_m, one_kilo):
+    mul = vec_m * one_kilo
+    rmul = one_kilo * vec_m
+    assert mul == rmul

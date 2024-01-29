@@ -1,6 +1,6 @@
 import pytest
 
-from classes import IncompatibleUnitsError, Quantity
+from classes import IncompatibleUnitsError, Quantity, Unit
 
 
 @pytest.fixture
@@ -102,3 +102,15 @@ def test_compare(one_kilo, two_kilos, one_meter):
 
 def test_round(two_kilos, kilo):
     assert round(Quantity(2.4, kilo)) == two_kilos
+
+
+def test_name(meter, second):
+    m = Quantity(1., meter)
+    assert m.name == "length"
+    s = Quantity(1., second)
+    assert s.name == "time"
+    v = m/s
+    assert v.name == None
+    Unit.update_dimensions("mechanics")
+    v2 = m/s
+    assert v2.name == "speed"

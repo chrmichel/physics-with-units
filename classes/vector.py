@@ -7,11 +7,17 @@ from .unit import Unit
 class Vector:
     """3D Vector"""
 
-    def __init__(self, x, y, z, unit: Unit | None = None) -> None:
+    def __init__(self, x, y, z, unit: Unit | None = None, name: str | None = None) -> None:
         self._x = x
         self._y = y
         self._z = z
         self.unit = unit
+        if name:
+            self.name = name
+        elif unit:
+            self.name = unit.get_name()
+        else:
+            self.name = None
 
     @property
     def x(self) -> Quantity:
@@ -50,7 +56,7 @@ class Vector:
         return self.length
 
     def __neg__(self) -> "Vector":
-        return Vector(-self._x, -self._y, -self._z, self.unit)
+        return Vector(-self._x, -self._y, -self._z, self.unit, self.name)
 
     def __str__(self) -> str:
         s = f"<{self._x:.2f} {self._y:.2f} {self._z:.2f}>"
@@ -104,7 +110,6 @@ class Vector:
                 self._z * number.value,
                 self.unit * number.unit,
             )
-
         return Vector(self._x * number, self._y * number, self._z * number, self.unit)
 
     def __eq__(self, other: "Vector") -> bool:
@@ -122,7 +127,7 @@ class Vector:
         new_x = round(self._x, ndigits)
         new_y = round(self._y, ndigits)
         new_z = round(self._z, ndigits)
-        return Vector(new_x, new_y, new_z, unit=self.unit)
+        return Vector(new_x, new_y, new_z, self.unit, self.name)
 
     def normalize(self) -> "Vector":
         """Normalize vector to unit length"""

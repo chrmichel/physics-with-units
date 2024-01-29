@@ -4,15 +4,19 @@ from .unit import Unit, IncompatibleUnitsError, NO_UNIT
 class Quantity:
     """Quantity with value and unit"""
 
-    def __new__(cls, value: int | float | complex, unit: Unit | None) -> None:
+    def __new__(cls, value: int | float | complex, unit: Unit | None, name: str|None = None) -> None:
         if unit == NO_UNIT or unit is None:
             return value
         instance = super().__new__(cls)
         return instance
 
-    def __init__(self, value: int | float | complex, unit: Unit) -> None:
+    def __init__(self, value: int | float | complex, unit: Unit, name: str|None = None) -> None:
         self.value = value
         self.unit = unit
+        if name:
+            self.name = name
+        else:
+            self.name = unit.get_name()
 
     def __str__(self) -> str:
         return f"{self.value} {str(self.unit)}"
@@ -30,7 +34,10 @@ class Quantity:
     def __mul__(self, other) -> "Quantity":
         if isinstance(other, Quantity):
             return Quantity(self.value * other.value, self.unit * other.unit)
-        return Quantity(self.value * other, self.unit)
+        elif type(other) in [int, float, complex]:
+            return Quantity(self.value * other, self.unit)
+        else:
+            return NotImplemented
 
     def __truediv__(self, other) -> "Quantity":
         if isinstance(other, Quantity):

@@ -8,22 +8,10 @@ def kilo2():
     return Unit([1])
 
 
-@pytest.fixture
-def kilo3():
-    return Unit([1], "kilo with another name")
-
-
 def test_add_kilos(kilo, kilo2):
     two_kilos = kilo + kilo2
     assert two_kilos._nums == [1, 0, 0, 0, 0, 0, 0]
-    assert two_kilos.name == kilo.name
     assert str(two_kilos) == "kg"
-
-
-def test_add_different_kilos(kilo, kilo3):
-    with pytest.raises(IncompatibleUnitsError) as e:
-        _ = kilo + kilo3
-    assert "cannot add" in str(e.value)
 
 
 def test_add_different_units(kilo, meter):
@@ -35,14 +23,7 @@ def test_add_different_units(kilo, meter):
 def test_sub_kilos(kilo, kilo2):
     two_kilos = kilo - kilo2
     assert two_kilos._nums == [1, 0, 0, 0, 0, 0, 0]
-    assert two_kilos.name == kilo.name
     assert str(two_kilos) == "kg"
-
-
-def test_sub_different_kilos(kilo, kilo3):
-    with pytest.raises(IncompatibleUnitsError) as e:
-        _ = kilo - kilo3
-    assert "cannot subtract" in str(e.value)
 
 
 def test_sub_different_units(kilo, meter):
@@ -101,35 +82,41 @@ def test_power_float(kilo):
     assert str(k5) == "kg^-0.5"
 
 
-def test_equal(kilo, kilo2, kilo3):
+def test_equal(kilo, kilo2):
     assert kilo == kilo2
-    assert kilo != kilo3
 
 
 def test_from_dict():
-    joule = Unit.from_dict("energy")
-    assert joule._nums == [1, 2, -2, 0, 0, 0, 0]
-    assert joule.name == "Joule"
-    assert str(joule) == "Joule"
+    meters = Unit.from_dict("length")
+    assert meters._nums == [0, 1, 0, 0, 0, 0, 0]
 
 
-def test_update_dict():
+def test_update_dict_from_dict():
     nums = [1, -3, 0, 0, 0, 0, 0]
-    name = "kilograms per cubic meter"
-    dic = {"density": (nums, name)}
+    dic = {"density": nums}
     Unit.update_dimensions(dic)
     assert "density" in Unit.dimensions.keys()
     dens = Unit.from_dict("density")
     assert dens._nums == nums
-    assert dens.name == name
 
 
-def test_check_dimensions(second):
-    f = Unit.from_dict("momentum") / second
-    assert f.check_dimensions() == ["force"]
+def test_update_dict_from_json():
+    Unit.update_dimensions("mechanics")
+    assert "speed" in Unit.dimensions
+
+
+def test_check_dimensions(meter):
+    f = Unit.from_dict("length")
+    assert f._nums == [0, 1] + [0] * 5
+    f = f * meter
+    print(f)
+    assert f.check_dimensions() == ["area"]
 
 
 def test_invert_kilo(kilo):
     inv = kilo.invert()
     assert inv._nums == [-1] + [0] * 6
-    assert inv.name is None
+
+
+def test_get_name(kilo):
+    assert kilo.get_name() == "mass"
