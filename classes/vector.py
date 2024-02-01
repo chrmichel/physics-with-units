@@ -7,7 +7,9 @@ from .unit import Unit
 class Vector:
     """3D Vector"""
 
-    def __init__(self, x, y, z, unit: Unit | None = None, name: str | None = None) -> None:
+    def __init__(
+        self, x, y, z, unit: Unit | None = None, name: str | None = None
+    ) -> None:
         self._x = x
         self._y = y
         self._z = z

@@ -114,7 +114,7 @@ def test_name(vec_m):
     grav = Constant.g_vector
     assert grav.name == "gravitational vector"
     Unit.update_dimensions("mechanics")
-    twograv = 2*grav
+    twograv = 2 * grav
     assert twograv.name == "acceleration"
 
 

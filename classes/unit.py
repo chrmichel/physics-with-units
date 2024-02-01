@@ -145,7 +145,7 @@ class Unit:
         # name = "Inverse " + self.name if self.name else None
         return Unit(nums)
 
-    def get_name(self, dimdict: dict|None = None) -> str | None:
+    def get_name(self, dimdict: dict | None = None) -> str | None:
         if dimdict:
             dims = self.check_dimensions(dimdict)
         else:

@@ -4,13 +4,17 @@ from .unit import Unit, IncompatibleUnitsError, NO_UNIT
 class Quantity:
     """Quantity with value and unit"""
 
-    def __new__(cls, value: int | float | complex, unit: Unit | None, name: str|None = None) -> None:
+    def __new__(
+        cls, value: int | float | complex, unit: Unit | None, name: str | None = None
+    ) -> None:
         if unit == NO_UNIT or unit is None:
             return value
         instance = super().__new__(cls)
         return instance
 
-    def __init__(self, value: int | float | complex, unit: Unit, name: str|None = None) -> None:
+    def __init__(
+        self, value: int | float | complex, unit: Unit, name: str | None = None
+    ) -> None:
         self.value = value
         self.unit = unit
         if name:

@@ -105,12 +105,12 @@ def test_round(two_kilos, kilo):
 
 
 def test_name(meter, second):
-    m = Quantity(1., meter)
+    m = Quantity(1.0, meter)
     assert m.name == "length"
-    s = Quantity(1., second)
+    s = Quantity(1.0, second)
     assert s.name == "time"
-    v = m/s
+    v = m / s
     assert v.name == None
     Unit.update_dimensions("mechanics")
-    v2 = m/s
+    v2 = m / s
     assert v2.name == "speed"
