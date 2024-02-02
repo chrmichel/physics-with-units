@@ -5,7 +5,10 @@ class Quantity:
     """Quantity with value and unit"""
 
     def __new__(
-        cls, value: int | float | complex, unit: Unit | None, name: str | None = None
+        cls,
+        value: int | float | complex,
+        unit: Unit | str | None,
+        name: str | None = None,
     ) -> None:
         if unit == NO_UNIT or unit is None:
             return value
@@ -13,17 +16,25 @@ class Quantity:
         return instance
 
     def __init__(
-        self, value: int | float | complex, unit: Unit, name: str | None = None
+        self, value: int | float | complex, unit: Unit | str, name: str | None = None
     ) -> None:
         self.value = value
-        self.unit = unit
-        if name:
-            self.name = name
-        else:
-            self.name = unit.get_name()
+        if type(unit) == Unit:
+            self.unit = unit
+            if name:
+                self.name = name
+            else:
+                self.name = unit.get_name()
+        elif type(unit) == str:
+            self.unit = Unit.from_dict(unit)
+            self.name = unit
 
     def __str__(self) -> str:
-        return f"{self.value} {str(self.unit)}"
+        s = ""
+        if self.name:
+            s += f"{self.name}: "
+        s += f"{self.value} {str(self.unit)}"
+        return s
 
     def __add__(self, other: "Quantity") -> "Quantity":
         if type(other) != Quantity:

@@ -8,18 +8,23 @@ class Vector:
     """3D Vector"""
 
     def __init__(
-        self, x, y, z, unit: Unit | None = None, name: str | None = None
+        self, x, y, z, unit: Unit | str | None = None, name: str | None = None
     ) -> None:
         self._x = x
         self._y = y
         self._z = z
-        self.unit = unit
-        if name:
-            self.name = name
-        elif unit:
-            self.name = unit.get_name()
+        if type(unit) == Unit:
+            self.unit = unit
+            if name:
+                self.name = name
+            else:
+                self.name = unit.get_name()
+        elif type(unit) == str:
+            self.unit = Unit.from_dict(unit)
+            self.name = unit
         else:
-            self.name = None
+            self.unit = None
+            self.name = name
 
     @property
     def x(self) -> Quantity:
@@ -61,7 +66,10 @@ class Vector:
         return Vector(-self._x, -self._y, -self._z, self.unit, self.name)
 
     def __str__(self) -> str:
-        s = f"<{self._x:.2f} {self._y:.2f} {self._z:.2f}>"
+        s = ""
+        if self.name:
+            s += f"{self.name}: "
+        s += f"<{self._x:.2f} {self._y:.2f} {self._z:.2f}>"
         if self.unit:
             s += f" {str(self.unit)}"
         return s
@@ -166,10 +174,7 @@ class Vector:
 
     def cross(self, other: "Vector") -> "Vector":
         """Cross product"""
-        if not self.unit and not other.unit:
-            unit = None
-        else:
-            unit = self.unit - other.unit
+        unit = self.unit * other.unit
 
         x = self._y * other._z - self._z * other._y
         y = self._z * other._x - self._x * other._z

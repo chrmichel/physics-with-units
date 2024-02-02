@@ -118,7 +118,7 @@ class Unit:
         if other is None:
             return self is None
         if type(other) != Unit:
-            raise TypeError
+            return False
         # must have same dimensions
         if self._nums != other._nums:
             return False
