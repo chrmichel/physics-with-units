@@ -16,8 +16,17 @@ class Quantity:
         return instance
 
     def __init__(
-        self, value: int | float | complex, unit: Unit | str, name: str | None = None
+        self,
+        value: int | float | complex,
+        unit: Unit | str | None,
+        name: str | None = None,
     ) -> None:
+        """
+        value: value of the quantity
+        unit: unit of the quantity; if str is given use Unit.from_dict to determine unit; if no unit is given
+              no quantity will be created but instead only the value is returned
+        name: name of the quantity; if None the dictionary will be checked to find a suitable name
+        """
         self.value = value
         if type(unit) == Unit:
             self.unit = unit
@@ -109,31 +118,3 @@ class Quantity:
 
     def __round__(self, ndigits: int = 0) -> "Quantity":
         return Quantity(round(self.value, ndigits), self.unit)
-
-
-if __name__ == "__main__":
-    from unit import KILO, METER
-
-    a = Quantity(1, KILO)
-    b = Quantity(2, KILO)
-    c = Quantity(1, METER)
-    d = Quantity(6.9, NO_UNIT)
-    d2 = Quantity(6.9, Unit([]))
-    d3 = Quantity(6.9, Unit([], ""))
-
-    print(a == b)
-    print(a <= b)
-    print(a >= b)
-    print(a < b)
-    print(a > b)
-    print(a != b)
-    print(a + b)
-    print(a * b)
-    print(a / c)
-    print(3 * a)
-    print(5 / b)
-    print(c / 5)
-    print(type(d))
-    print(type(d2))
-    print(type(d3))
-    print(a / b)

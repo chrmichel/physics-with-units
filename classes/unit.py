@@ -119,18 +119,8 @@ class Unit:
             return self is None
         if type(other) != Unit:
             return False
-        # must have same dimensions
         if self._nums != other._nums:
             return False
-        # if both have names, must be the same
-        # if self.name and other.name:
-        #     return self.name == other.name
-        # # if neither has a name, return True
-        # elif self.name is None and other.name is None:
-        #     return True
-        # # False if only one has a name
-        # else:
-        #     return False
         return True
 
     def check_dimensions(self, dims: dict = dimensions) -> list[str]:
@@ -142,7 +132,6 @@ class Unit:
 
     def invert(self) -> "Unit":
         nums = [-i for i in self._nums]
-        # name = "Inverse " + self.name if self.name else None
         return Unit(nums)
 
     def get_name(self, dimdict: dict | None = None) -> str | None:
@@ -151,12 +140,8 @@ class Unit:
         else:
             dims = self.check_dimensions()
         if len(dims) == 1:
-            # new_name = Unit.dimensions[dims[0]][1]
-            # print(f"Changing name from {self.name} to {new_name}")
-            # self.name = new_name
             return dims[0]
         elif len(dims) == 0:
-            # print("No matching unit found. Deleting name.")
             return None
         else:
             for i, d in enumerate(dims):
